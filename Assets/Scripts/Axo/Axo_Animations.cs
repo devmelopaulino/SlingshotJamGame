@@ -9,6 +9,7 @@ public class Axo_Animations : MonoBehaviour
     private void Update()
     {
         animator.SetBool("Walking", move.walking);
+        animator.SetFloat("WalkDirection", move.horizontal_direction);
     }
 
 }
