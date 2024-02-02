@@ -9,8 +9,6 @@ public class Rock_Move : MonoBehaviour
     [SerializeField] private float velocity;
     public void Move(Vector3 direction)
     {
-        Debug.Log(direction * velocity);
         body.velocity = direction * velocity;
-        //body.AddForce(direction * velocity, ForceMode.Force);
     }
 }

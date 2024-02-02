@@ -35,6 +35,8 @@ public class Sling_Attack : MonoBehaviour
     [SerializeField] private GameObject rock;
 
     [SerializeField] private Transform rock_locations;
+
+    [SerializeField] private float max_more;
     private void Start()
     {
         time_up = up_animation.length;
@@ -45,13 +47,6 @@ public class Sling_Attack : MonoBehaviour
     private void Update()
     {
         StartCoroutine(Attack());
-        CalculatePath();
-    }
-    private void CalculatePath()
-    {
-        //RectTransformUtility.ScreenPointToWorldPointInRectangle(aim_canvas, aim_canvas.position, Camera.main, out Vector3 path);
-        //Debug.Log(path);
-
     }
     private IEnumerator Attack()
     {
@@ -66,45 +61,34 @@ public class Sling_Attack : MonoBehaviour
             {
                 model.SetActive(true);
             }            
-            //yield return new WaitForSeconds(0.1f);
-
             uping = true;
             yield return new WaitForSeconds(time_up); // UP ^^^
-
             uping = false;
             pushing = true;
-
             yield return new WaitForSeconds(time_push); // PUSH ^^^
+            pushing = false;
 
-
+            float more_velocity = 1f;
             while (inputs.left_click_hold)
             {
-                pushing = false;
                 holding = true;
+                if (more_velocity < max_more)
+                {
+                    more_velocity += 0.1f;
+                }
                 yield return null;
             }
 
             giving = true;
 
             yield return new WaitForSeconds(time_give); // GIVE ^^^
-
             giving = false;
             backing = true;
+
             GameObject new_rock = Instantiate(rock, rock_locations.position, Quaternion.identity);
+            Vector3 direction = (aim.transform.position - rock_locations.transform.position).normalized;
 
-            //Vector3 centroDaTela = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-            //Vector3 centroDoMundo = Camera.main.ScreenToWorldPoint(centroDaTela);
-            //Vector3 direcao = (centroDoMundo - rock_locations.transform.position).normalized;
-
-            //direcao.y = direcao.y * 4f;
-
-            //RectTransformUtility.ScreenPointToWorldPointInRectangle(aim_canvas, aim_canvas.position, Camera.main, out Vector3 path);
-            Vector3 direction = (Camera.main.transform.position - rock_locations.transform.position).normalized;
-
-            //direction = Camera.main.transform.position;
-
-
-
+            direction *= more_velocity;
 
             new_rock.GetComponent<Rock_Move>().Move(direction);
 
